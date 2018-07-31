@@ -1,6 +1,5 @@
 ﻿@model ProductsListViewModel
 
-
 @foreach (var p in Model.Products)
 {
     <div class="well">
@@ -10,13 +9,25 @@
                 @p.Price.ToString("c")
             </span>
         </h3>
-        <span class="lead">@p.Description</span>
+        <form id="@p.ProductID" asp-action="AddToCart"
+              asp-controller="Cart" method="post">
+            <input type="hidden" asp-for="@p.ProductID" name="ProductID" />
+            <input type="hidden" name="returnUrl"
+                   value="@ViewContext.HttpContext.Request.PathAndQuery()" />
+            <span class="lead">
+                @p.Description
+                <button type="submit" class="btn btn-success btn-sm pull-right">
+                    Add To Cart
+                </button>
+            </span>
+        </form>
     </div>
 }
-<div page-model="@Model.PagingInfo" page-action="List" page-classes-enabled="true"
-     page-class="btn" page-class-normal="btn-default"
-     page-class-selected="btn-primary" class="btn-group pull-right">
-</div>
+    <div page-model="@Model.PagingInfo" page-action="List" page-classes-enabled="true"
+         page-class="btn" page-class-normal="btn-default"
+         page-class-selected="btn-primary" page-url-category="@Model.CurrentCategory"
+         class="btn-group pull-right">
+    </div>
 
 
 @*@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
