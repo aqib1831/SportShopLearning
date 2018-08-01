@@ -21,6 +21,9 @@ namespace SportsShop
             var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
             var connectionString = configuration.GetConnectionString("SportStoreProducts");
             builder.UseSqlServer(connectionString);
+          //var  builder1 = new DbContextOptionsBuilder<AppIdentityDbContext>();
+          //  connectionString = configuration.GetConnectionString("SportStoreIdentity");
+            //builder1.UseSqlServer(connectionString);
             return new ApplicationDbContext(builder.Options);
         }
     }

@@ -16,7 +16,10 @@
     <script asp-src-include="lib/jquery-validation-unobtrusive/**/*.min.js"></script>
 </head>
 <body class="panel panel-default">
-    <div class="panel-heading"><h4>@ViewBag.Title</h4></div>
+    <div class="panel-heading"><h4>
+    @ViewBag.Title
+    @await Html.PartialAsync("_LoginPartial")
+</h4></div>
     <div class="panel-body">
         @if (TempData["message"] != null)
         {

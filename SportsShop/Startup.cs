@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using identity.Models;
+using identity.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +30,22 @@ namespace SportsShop
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(
             Configuration.GetConnectionString("SportStoreProducts")));
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //options.UseSqlServer(
+            //Configuration.GetConnectionString("SportStoreIdentity")));
+            // services.AddIdentity<IdentityUser, IdentityRole>()
+            //.AddEntityFrameworkStores<AppIdentityDbContext>();
+            services.AddDbContext<AppIdentityDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("SportStoreIdentity")));
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppIdentityDbContext>()
+                .AddDefaultTokenProviders();
+            services.AddScoped<SignInManager<ApplicationUser>, SignInManager<ApplicationUser>>();
+
+
+            // Add application services.
+            services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IProductRepository, EFProductRepository>();
             services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -52,7 +71,7 @@ namespace SportsShop
             app.UseStaticFiles();
             app.UseSession();
             // app.UseMvcWithDefaultRoute();
-
+            app.UseAuthentication();
             app.UseMvc(routes => {
                 routes.MapRoute(
                 name: null,
@@ -76,6 +95,7 @@ namespace SportsShop
                 routes.MapRoute(name: null, template: "{controller}/{action}/{id?}");
             });
             //SeedData.EnsurePopulated(app);
+           // IdentitySeedData.EnsurePopulated(app);
         }
     }
 }
